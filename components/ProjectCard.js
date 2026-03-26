@@ -1,11 +1,27 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, Image, TouchableOpacity, Linking, Alert } from "react-native";
 
-export default function ProjectCard({ name, image }) {
+export default function ProjectCard({ name, image, githubUrl }) {
+
+  const onpress = async () => {
+
+    try {
+      const supported = await Linking.canOpenURL(githubUrl);
+
+      if (supported) {
+        await Linking.openURL(githubUrl);
+      } else {
+        Alert.alert(`URL is not working: ${githubUrl}`);
+      }
+    } catch (error) {
+      Alert.alert("An error occurred", error.message);
+    }
+  };
+
   return (
-    <View>
+    <TouchableOpacity onPress={onpress}>
       <Image style={styles.image} source={image} resizeMode="contain" />
       <Text style={styles.name}>{name}</Text>
-    </View>
+    </TouchableOpacity>
   );
 }
 
